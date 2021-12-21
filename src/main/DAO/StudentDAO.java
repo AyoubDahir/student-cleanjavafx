@@ -23,7 +23,7 @@ public class StudentDAO
 
 
 
-        String sql = "INSERT INTO `student`(`fullname`, `address`, `phone`, `gender`) VALUES (?,?,?,?)";
+        String sql = "INSERT INTO `student`(`fullname`, `address`, `phone`, `gender`,`status`) VALUES (?,?,?,?,'available')";
 
         PreparedStatement statement = con.prepareStatement(sql);
         statement.setString(1, studentobj.getFulname());
@@ -45,7 +45,7 @@ public class StudentDAO
     }
 
     public void deleteStudent(studentModel studentobj) throws SQLException {
-        String delete = "DELETE FROM `student` WHERE `fullname`=?";
+        String delete = "UPDATE `student` SET `status`='deleted' WHERE `fullname`=?";
 
         PreparedStatement statement = con.prepareStatement(delete);
         statement.setString(1, studentobj.getFulname());

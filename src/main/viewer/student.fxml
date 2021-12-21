@@ -24,7 +24,7 @@
             <String fx:value="roundButton" />
             <String fx:value="buttonTransparent" />
          </styleClass></Button>
-      <TableView fx:id="tableview" layoutX="-54.0" layoutY="407.0" onMouseClicked="#mouseevent" prefHeight="194.0" prefWidth="744.0">
+      <TableView fx:id="tableview" layoutY="303.0" onMouseClicked="#mouseevent" prefHeight="194.0" prefWidth="744.0">
         <columns>
           <TableColumn fx:id="collfulname" prefWidth="276.0000305175781" text="Fullname" />
           <TableColumn fx:id="colladdress" prefWidth="123.0" text="Address" />

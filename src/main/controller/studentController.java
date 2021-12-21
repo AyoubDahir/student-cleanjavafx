@@ -153,7 +153,7 @@ public class studentController implements Initializable
 
         try {
             con= db.connect();
-            String query="SELECT COUNT(id) FROM student";
+            String query="SELECT COUNT(id) FROM student where status='available' ";
             PreparedStatement statement=con.prepareStatement(query);
 
             ResultSet rs=statement.executeQuery();
@@ -199,7 +199,7 @@ public class studentController implements Initializable
         collphone.setCellValueFactory(new PropertyValueFactory<>("phone"));
         collgender.setCellValueFactory(new PropertyValueFactory<>("gender"));
 
-        String sqyert="SELECT * FROM `student`";
+        String sqyert="SELECT * FROM `student` where status='available' ";
         ObservableList<studentModel>patientlist=FXCollections.observableArrayList();
         try {
             PreparedStatement patietnstatement=con.prepareStatement(sqyert);
