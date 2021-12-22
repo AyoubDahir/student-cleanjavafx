@@ -6,6 +6,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
@@ -20,6 +21,8 @@ import java.util.ResourceBundle;
 import main.modes.*;
 import main.modes.studentModel;
 import main.utilities.*;
+
+import javax.xml.crypto.dsig.spec.ExcC14NParameterSpec;
 
 public class studentController implements Initializable
 {
@@ -59,71 +62,21 @@ public class studentController implements Initializable
     private Label lbltotal;
 
 
+
     @FXML
     private Button btndelete;
 
-    public studentController() throws SQLException, ClassNotFoundException {
-    }
-
-
     @FXML
-    void deletestudent(ActionEvent event) throws Exception {
-
-        String name=txt_fullname.getText();
-        studentModel studentobj=new studentModel();
-        studentobj.setFulname(name);
-        StudentDAO so=new StudentDAO();
-        so.deleteStudent(studentobj);
-        sshow();
-        totalshow();
-
-
-
-    }
+    private PieChart pchart;
 
     @FXML
     private Button btnupdate;
     Connection con=db.connect();
 
-
-
-
-
-    @FXML
-    void updatestudent(ActionEvent event) throws Exception {
-        String name=txt_fullname.getText();
-        String address=txt_address.getText();
-        String phone=txt_phone.getText();
-        String gender=combogender.getValue();
-
-        studentModel studentobj=new studentModel();
-        studentobj.setAddress(address);
-        studentobj.setFulname(name);
-        studentobj.setPhone(phone);
-        studentobj.setGender(gender);
-//      tableview.getItems().add(studentobj);
-
-        StudentDAO so=new StudentDAO();
-        so.updateStudent(studentobj);
-        sshow();
-        mouseclick();
-        totalshow();
-
-
-
-
-
-    }
-    @FXML
-    void mouseevent(MouseEvent event)
-    {
-        mouseclick();
-
+    public studentController() throws SQLException, ClassNotFoundException {
     }
 
-
-
-
+    //insert code below
     @FXML
     void Insert(ActionEvent event) throws Exception {
         String name=txt_fullname.getText();
@@ -147,10 +100,72 @@ public class studentController implements Initializable
         totalshow();
 
     }
+    
+    //end of insert
+
+
+    //update code below
+
+    @FXML
+    void updatestudent(ActionEvent event) throws Exception {
+        String name=txt_fullname.getText();
+        String address=txt_address.getText();
+        String phone=txt_phone.getText();
+        String gender=combogender.getValue();
+
+        studentModel studentobj=new studentModel();
+        studentobj.setAddress(address);
+        studentobj.setFulname(name);
+        studentobj.setPhone(phone);
+        studentobj.setGender(gender);
+//      tableview.getItems().add(studentobj);
+
+        StudentDAO so=new StudentDAO();
+        so.updateStudent(studentobj);
+        sshow();
+        mouseclick();
+        totalshow();
+
+    }
+
+    //end of update code
+
+    //delete code below
+
+    @FXML
+    void deletestudent(ActionEvent event) throws Exception {
+
+        String name=txt_fullname.getText();
+        studentModel studentobj=new studentModel();
+        studentobj.setFulname(name);
+        StudentDAO so=new StudentDAO();
+        so.deleteStudent(studentobj);
+        sshow();
+        totalshow();
+
+
+
+    }
+
+
+
+
+
+
+
+    @FXML
+    void mouseevent(MouseEvent event)
+    {
+        mouseclick();
+
+    }
+
+
+
+
+
     public void totalshow () throws Exception
     {
-
-
         try {
             con= db.connect();
             String query="SELECT COUNT(id) FROM student where status='available' ";
@@ -162,19 +177,10 @@ public class studentController implements Initializable
                 String count=rs.getString("COUNT(id)");
 
                 lbltotal.setText(count);
-
-
-
-
             }
-
-
-
-
         }catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
     }
 
     public void mouseclick()
@@ -224,25 +230,72 @@ public class studentController implements Initializable
         }
     }
 
+    public  void piichart()
+    {
+        try {
+            ObservableList<PieChart.Data>data= FXCollections.observableArrayList();
+
+            con = db.connect();
+            String query="SELECT * FROM student";
+
+
+            PreparedStatement statement=con.prepareStatement(query);
+
+            ResultSet rs=statement.executeQuery();
+
+            while (rs.next()){
+                data.add(new PieChart.Data(rs.getString("address"),rs.getInt("id")));
+            }
+
+//
+            pchart.setData(data);
+
+
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+
+
+
+
+    }
+
 
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
-        // Inizatilabe Gender
-        ObservableList<String>gender= FXCollections.observableArrayList("male","female");
-        combogender.setItems(gender);
-
-        // Initialize Id in variable
-       sshow();
-       mouseclick();
         try {
+            // Inizatilabe Gender
+            ObservableList<String> gender = FXCollections.observableArrayList("male", "female");
+            combogender.setItems(gender);
+
+            // Initialize Id in variable
+            sshow();
+            mouseclick();
             totalshow();
-        } catch (Exception e) {
+            piichart();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }catch (Exception e)
+        {
             e.printStackTrace();
         }
-
 
     }
 
