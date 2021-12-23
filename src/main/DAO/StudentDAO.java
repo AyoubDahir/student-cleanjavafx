@@ -29,10 +29,10 @@ public class StudentDAO
 
 
 
-        statement.setString(2, studentobj.getFulname());
-        statement.setString(3, studentobj.getAddress());
-        statement.setString(4, studentobj.getPhone());
-        statement.setString(5, studentobj.getGender());
+        statement.setString(1, studentobj.getFulname());
+        statement.setString(2, studentobj.getAddress());
+        statement.setString(3, studentobj.getPhone());
+        statement.setString(4, studentobj.getGender());
 
         int result = statement.executeUpdate();
 
