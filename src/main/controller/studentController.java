@@ -61,6 +61,10 @@ public class studentController implements Initializable
 
     @FXML
     private Label lbltotal;
+    @FXML
+    private Button btnupdate;
+    Connection con=db.connect();
+
 
 
     @FXML
@@ -74,66 +78,6 @@ public class studentController implements Initializable
 
     public studentController() throws SQLException, ClassNotFoundException {
     }
-
-
-    @FXML
-    void deletestudent(ActionEvent event) throws Exception {
-
-        String name=txt_fullname.getText();
-        studentModel studentobj=new studentModel();
-        studentobj.setFulname(name);
-        StudentDAO so=new StudentDAO();
-        so.deleteStudent(studentobj);
-        sshow();
-        totalshow();
-
-
-
-    }
-
-    @FXML
-    private Button btnupdate;
-    Connection con=db.connect();
-
-
-
-
-
-    @FXML
-    void updatestudent(ActionEvent event) throws Exception {
-        String name=txt_fullname.getText();
-        String address=txt_address.getText();
-        String phone=txt_phone.getText();
-        String gender=combogender.getValue();
-
-        studentModel studentobj=new studentModel();
-        studentobj.setAddress(address);
-        studentobj.setFulname(name);
-        studentobj.setPhone(phone);
-        studentobj.setGender(gender);
-//      tableview.getItems().add(studentobj);
-
-        StudentDAO so=new StudentDAO();
-        so.updateStudent(studentobj);
-        sshow();
-        mouseclick();
-        totalshow();
-
-
-
-
-
-    }
-    @FXML
-    void mouseevent(MouseEvent event)
-    {
-        mouseclick();
-
-    }
-
-
-
-
     @FXML
     void Insert(ActionEvent event) throws Exception {
         String name=txt_fullname.getText();
@@ -153,56 +97,53 @@ public class studentController implements Initializable
 
         StudentDAO studentDAOobj=new StudentDAO();
         studentDAOobj.createstudent(studentobj);
-        sshow();
+        studentTableShow();
         totalshow();
 
     }
-    public void totalshow () throws Exception
-    {
+    //end of insert
+
+    //begin of udate
+
+    @FXML
+    void updatestudent(ActionEvent event) throws Exception {
+        String name=txt_fullname.getText();
+        String address=txt_address.getText();
+        String phone=txt_phone.getText();
+        String gender=combogender.getValue();
+
+        studentModel studentobj=new studentModel();
+        studentobj.setAddress(address);
+        studentobj.setFulname(name);
+        studentobj.setPhone(phone);
+        studentobj.setGender(gender);
+//      tableview.getItems().add(studentobj);
+
+        StudentDAO so=new StudentDAO();
+        so.updateStudent(studentobj);
+        studentTableShow();
+        mouseclick();
+        totalshow();
+    }
+    //end of update
+    //begin of delete
+    @FXML
+    void deletestudent(ActionEvent event) throws Exception {
+
+        String name=txt_fullname.getText();
+        studentModel studentobj=new studentModel();
+        studentobj.setFulname(name);
+        StudentDAO so=new StudentDAO();
+        so.deleteStudent(studentobj);
+        studentTableShow();
+        totalshow();
 
 
-        try {
-            con= db.connect();
-            String query="SELECT COUNT(id) FROM student where status='available' ";
-            PreparedStatement statement=con.prepareStatement(query);
-
-            ResultSet rs=statement.executeQuery();
-            while (rs.next())
-            {
-                String count=rs.getString("COUNT(id)");
-
-                lbltotal.setText(count);
-
-
-
-
-            }
-
-
-
-
-        }catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
 
     }
 
-    public void mouseclick()
-    {
-
-        studentModel mobj=new studentModel();
-
-        mobj=tableview.getSelectionModel().getSelectedItem();
-        if(mobj!=null) {
-            txt_fullname.setText(mobj.getFulname());
-            txt_address.setText(mobj.getAddress());
-            txt_phone.setText(mobj.getPhone());
-            combogender.setValue(mobj.getGender());
-        }
-    }
-
-
-    public void sshow()
+    //Student table show
+    public void studentTableShow()
     {
         collfulname.setCellValueFactory(new PropertyValueFactory<>("fulname"));
         colladdress.setCellValueFactory(new PropertyValueFactory<>("address"));
@@ -221,10 +162,6 @@ public class studentController implements Initializable
 
                         rs7.getString("fullname"),rs7.getString("address"),rs7.getString("phone"),rs7.getString("gender")));
 
-//
-
-
-
             }
             tableview.setItems(patientlist);
 
@@ -233,6 +170,57 @@ public class studentController implements Initializable
             throwables.printStackTrace();
         }
     }
+
+
+
+    //shoing the total number of students that are available
+    public void totalshow () throws Exception
+    {
+        try {
+            con= db.connect();
+            String query="SELECT COUNT(id) FROM student where status='available' ";
+            PreparedStatement statement=con.prepareStatement(query);
+
+            ResultSet rs=statement.executeQuery();
+            while (rs.next())
+            {
+                String count=rs.getString("COUNT(id)");
+
+                lbltotal.setText(count);
+
+
+
+
+            }
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+    }
+
+    //code for showing the update
+    @FXML
+    void mouseevent(MouseEvent event)
+    {
+        mouseclick();
+
+    }
+
+    public void mouseclick()
+    {
+
+        studentModel mobj=new studentModel();
+
+        mobj=tableview.getSelectionModel().getSelectedItem();
+        if(mobj!=null) {
+            txt_fullname.setText(mobj.getFulname());
+            txt_address.setText(mobj.getAddress());
+            txt_phone.setText(mobj.getPhone());
+            combogender.setValue(mobj.getGender());
+        }
+    }
+
+
 
     public void seach()
     {
@@ -270,8 +258,7 @@ public class studentController implements Initializable
         ObservableList<String>gender= FXCollections.observableArrayList("male","female");
         combogender.setItems(gender);
 
-        // Initialize Id in variable
-       sshow();
+       studentTableShow();
        mouseclick();
        totalshow();
 
